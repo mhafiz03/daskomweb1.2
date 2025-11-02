@@ -15,8 +15,8 @@ services:
     restart: always
     environment:
       PMA_HOST: lms1_mysql
-      PMA_PORT: 3306
-      PMA_ABSOLUTE_URI: https://lms1.daskomlab.com/wihh-ada-php/
+    PMA_PORT: 3306
+    PMA_ABSOLUTE_URI: "https://lms.takanashataryu.my.id/wihh-ada-php/"
     ports:
       - "8081:80"
     depends_on:
