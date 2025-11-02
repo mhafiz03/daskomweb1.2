@@ -28,6 +28,7 @@ export function useNavigation(config = {}) {
     menuTp: false,
     menuNilai: false,
     menuSetPraktikan: false,
+    menuLihatTp: false,
     menuPelanggaran: false,
     menuRanking: false,
     menuAllLaporan: false,
@@ -57,6 +58,7 @@ export function useNavigation(config = {}) {
     tp: { route: 'tp', menu: 'menuTp' },
     nilai: { route: 'nilai', menu: 'menuNilai' },
     setpraktikan: { route: 'setpraktikan', menu: 'menuSetPraktikan' },
+  lihat_tp: { path: '/lihat_tp', menu: 'menuLihatTp' },
     pelanggaran: { route: 'pelanggaran', menu: 'menuPelanggaran' },
     rating: { route: 'rating', menu: 'menuRanking' },
     laporan: { route: 'laporan', menu: 'menuAllLaporan' },
@@ -102,7 +104,7 @@ export function useNavigation(config = {}) {
       const animatedPages = [
         'asisten', 'none', 'kelas', 'soal', 'plotting', 'modul',
         'konfigurasi', 'tp', 'polling', 'history',
-        'nilai', 'pelanggaran', 'setpraktikan', 'rating',
+        'nilai', 'pelanggaran', 'setpraktikan', 'lihat_tp', 'rating',
         'allLaporan', 'laporan', 'jawaban'
       ];
       
@@ -147,9 +149,14 @@ export function useNavigation(config = {}) {
     const route = routeMap[destination];
     
     if (userType === 'asisten') {
-      url = route?.route 
-        ? `/asisten/${route.route}?comingFrom=${comingFrom}&position=${scrollPosition}`
-        : `/asisten?comingFrom=${comingFrom}&position=${scrollPosition}`;
+      if (route?.path) {
+        const connector = route.path.includes('?') ? '&' : '?';
+        url = `${route.path}${connector}comingFrom=${comingFrom}&position=${scrollPosition}`;
+      } else {
+        url = route?.route
+          ? `/asisten/${route.route}?comingFrom=${comingFrom}&position=${scrollPosition}`
+          : `/asisten?comingFrom=${comingFrom}&position=${scrollPosition}`;
+      }
     } else if (userType === 'praktikan') {
       url = route?.route 
         ? `/praktikan/${route.route}?comingFrom=${comingFrom}&position=${scrollPosition}`

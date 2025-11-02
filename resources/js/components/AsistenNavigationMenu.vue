@@ -8,7 +8,7 @@
           :class="{ 'bg-yellow-500': menuProfil }"
           class="px-4 rounded-full flex items-center text-green-800 hover:text-green-900 font-overpass text-2xl cursor-pointer duration-300"
           @click="handleNavigate('')">
-          <img class="fas fa-home fa-lg h-6 w-6"/>
+          <i class="fas fa-home fa-lg h-6 w-6"></i>
         </span>
       </div>
 
@@ -67,7 +67,7 @@
         <span 
           class="px-4 rounded-full text-green-800 hover:text-green-900 font-overpass text-2xl cursor-pointer duration-300"
           @click="showMore = !showMore">
-          <img :class="{ 'transform rotate-180': showMore }" class="fas fa-angle-down h-6 w-6 duration-300"/>
+          <i :class="['fas fa-angle-down h-6 w-6 duration-300', { 'transform rotate-180': showMore }]"></i>
         </span>
       </div>
 

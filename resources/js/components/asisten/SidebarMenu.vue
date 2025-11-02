@@ -17,7 +17,7 @@
       >
         <div class="w-7/12 my-2 flex">
           <div class="w-4/6"></div>
-          <img :class="['select-none m-auto w-2/6 h-auto', item.icon]" />
+          <i :class="['select-none m-auto w-2/6 h-auto text-3xl text-green-900', item.icon]"></i>
         </div>
         <span class="ml-6 font-merri-bold font-medium w-full text-start self-center text-xl">
           {{ item.label }}

@@ -333,7 +333,7 @@
             <span class="m-auto font-monda-bold text-sm text-right w-full">
               Logout
             </span>
-            <img class="select-none p-2 h-full w-auto mr-16 m-auto fas fa-sign-out-alt">
+            <i class="select-none fas fa-sign-out-alt text-2xl p-2 mr-16 m-auto"></i>
           </div>
         </div>
       </div>
@@ -623,6 +623,22 @@ export default {
   async mounted() {
     this.toast = useToast();
 
+    const originalErrorToast = this.toast.error.bind(this.toast);
+    this.toast.error = (message, options) => {
+      const stackLines = new Error().stack?.split('\n') ?? [];
+      const callSiteLine = stackLines.find((line) => line.includes('Praktikan.vue')) ?? stackLines[2] ?? '';
+      const normalizedCallSite = callSiteLine.trim().replace(/^at\s+/i, '') || 'unknown source';
+      const debugPrefix = `[Praktikan.vue -> ${normalizedCallSite}] `;
+
+      console.error('[Praktikan Toast Error]', {
+        message,
+        callSite: normalizedCallSite,
+        stack: stackLines.join('\n'),
+      });
+
+      return originalErrorToast(`${debugPrefix}${message ?? ''}`, options);
+    };
+
     $('body').addClass('closed');
     this.showProfil();
 
@@ -703,10 +719,12 @@ export default {
       try {
         const { data } = await this.$axios.post(`/praktikan/nilai/${this.currentUser.id}`);
 
-        if (data.message !== 'success') {
-          this.toast.error(data.message);
-          return;
-        }
+        // if (data.message !== 'success') {
+        //   if (data.message !== 'nope') {
+        //     this.toast.error(data.message);
+        //   }
+        //   return;
+        // }
 
         this.resetNilaiCollections();
 
@@ -748,10 +766,10 @@ export default {
       try {
         const { data } = await this.$axios.get(`/api/soal/tp/${flag}/${this.currentUser.id}`);
 
-        if (data.message !== 'success') {
-          this.toast.error(data.message);
-          return;
-        }
+        // if (data.message !== 'success') {
+        //   this.toast.error(data.message);
+        //   return;
+        // }
 
         const essayQuestions = data.all_soalEssay || [];
         const programQuestions = data.all_soalProgram || [];
@@ -786,8 +804,16 @@ export default {
           this.pembahasanTp.modul_id = data.tp.modul_id;
           this.pembahasanTp.pembahasan = data.tp.pembahasan;
           this.qrcodeData.modul_id = data.tp.modul_id;
+        } else if (data.message === 'nope') {
+          this.pembahasanTp.modul_id = null;
+          this.pembahasanTp.pembahasan = '';
+          this.qrcodeData.modul_id = null;
+          console.info('[TP Discussion] Pembahasan tidak diaktifkan saat ini.');
         } else if (data.message !== 'success') {
-          this.toast.error(data.message);
+          this.pembahasanTp.modul_id = null;
+          this.pembahasanTp.pembahasan = '';
+          this.qrcodeData.modul_id = null;
+          console.info('[TP Discussion] Pembahasan tidak tersedia:', data.message);
         }
       } catch (error) {
         this.handleRequestError(error, 'Gagal memuat pembahasan TP');
@@ -853,6 +879,14 @@ export default {
     },
 
     handleRequestError(error, fallbackMessage) {
+      const errorCode = error?.code || '';
+      const errorMessage = typeof error?.message === 'string' ? error.message.toLowerCase() : '';
+
+      // Ignore cancellations or aborted requests
+      if (errorCode === 'ERR_CANCELED' || error?.name === 'CanceledError' || errorMessage.includes('canceled')) {
+        return;
+      }
+
       if (error?.response?.data?.message) {
         this.toast.error(error.response.data.message);
       } else if (fallbackMessage) {

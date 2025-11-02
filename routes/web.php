@@ -283,8 +283,8 @@ Route::prefix('api')->name('api.')->group(function () {
     Route::post('/soal/mandiri/by-ids', [SoalMandiriController::class, 'getByIds'])->name('soal.mandiri.by_ids');
 });
 
-// Special Routes (No middleware)
-Route::get('/lihat_tp', [PageController::class, 'lihatTp'])->name('lihat_tp');
+// Special Routes
+Route::get('/lihat_tp', [PageController::class, 'lihatTp'])->name('lihat_tp')->middleware('loggedIn:asisten');
 
 // Legacy Routes - For Backward Compatibility (TODO: Update frontend to use new routes)
 Route::post('/loginAsisten', [AsistenLoginController::class, 'login'])->name('loginAsisten');

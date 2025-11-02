@@ -17,6 +17,7 @@ import {
     faChartArea,
     faEnvelopeOpen,
     faArrowCircleDown,
+    faAngleDown,
     faEnvelope,
     faWindowMaximize,
     faWindowClose,
@@ -62,6 +63,7 @@ import {
     faCommentSms,
     faCommentDots,
     faCommentNodes,
+    faEye,
 } from '@fortawesome/free-solid-svg-icons';
 import { faLine, faInstagram, faYoutube } from '@fortawesome/free-brands-svg-icons';
 
@@ -81,6 +83,7 @@ library.add(
     faChartArea,
     faEnvelopeOpen,
     faArrowCircleDown,
+    faAngleDown,
     faEnvelope,
     faWindowMaximize,
     faWindowClose,
@@ -129,6 +132,7 @@ library.add(
     faCommentSms,
     faCommentDots,
     faCommentNodes,
+    faEye,
 );
 
 dom.watch();

@@ -87,6 +87,11 @@ export const MENU_ITEMS = [
     privilege: 'tp',
   },
   {
+    id: 'lihat_tp',
+    label: 'Lihat TP',
+    icon: 'fas fa-eye',
+  },
+  {
     id: 'jawaban',
     label: 'Jawaban',
     icon: 'fas fa-tasks',

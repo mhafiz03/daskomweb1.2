@@ -529,12 +529,14 @@ class PageController extends Controller
     public function lihatTp()
     {
         $user = Auth::guard('asisten')->user();
+        $userRole = Role::where('id', $user->role_id)->first();
         $allModul = Modul::orderBy('isEnglish', 'asc')->get();
 
-        return Inertia::render('LihatTp', [
+        return Inertia::render('LihatTp', array_merge($this->getCommonParams(), [
             'currentUser' => $user,
+            'userRole' => $userRole->role,
             'allModul' => $allModul,
-        ]);
+        ]));
     }
 
     /**

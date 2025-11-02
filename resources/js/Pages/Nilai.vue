@@ -217,7 +217,7 @@
           <span class="m-auto font-monda-bold text-lg text-right w-full">
             Logout
           </span>
-          <img class="select-none p-3 h-full w-auto mr-20 m-auto fas fa-sign-out-alt">
+          <i class="select-none fas fa-sign-out-alt text-2xl p-3 mr-20 m-auto"></i>
         </div>
       </div>
     </div>
