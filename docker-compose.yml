@@ -70,21 +70,6 @@ services:
     depends_on:
       - frontend
 
-  lms1_nginx:
-    image: nginx:1.27-alpine
-    container_name: lms1_nginx
-    restart: always
-    depends_on:
-      - lms1_web
-      - frontend
-      - lms1_phpmyadmin
-    volumes:
-      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
-    ports:
-      - "80:80"
-    networks:
-      - lms1_network
-
 networks:
   lms1_network:
     driver: bridge
