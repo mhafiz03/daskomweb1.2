@@ -25,3 +25,4 @@ int main() {
 - [Aliza Nurfitrian Meizahra [ALL]](https://allzanrv3.vercel.app/)
 - [Muhammad Hafiz [MHZ]](https://mhafiz03.github.io/)
 - [Umar Zaki Gunawan [UZY]](https://marzk-porto.vercel.app)
+- [Mohammad Fiqri Firmansyah [RYU]](https://tatsuyaryu.my.id)
