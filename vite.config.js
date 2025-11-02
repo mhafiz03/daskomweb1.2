@@ -17,6 +17,7 @@ export default defineConfig({
         port: 5173,
         strictPort: true,
         cors: true,
+        allowedHosts: ['fe.takanashataryu.my.id'],
         hmr: {
             host: '127.0.0.1',
             port: 5173,
