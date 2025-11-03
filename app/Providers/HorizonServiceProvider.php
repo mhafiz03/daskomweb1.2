@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Providers;
-
+use App\Models\Asisten;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Horizon\Horizon;
 use Laravel\Horizon\HorizonApplicationServiceProvider;
@@ -15,9 +17,17 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
     {
         parent::boot();
 
-        // Horizon::routeSmsNotificationsTo('15556667777');
-        // Horizon::routeMailNotificationsTo('example@example.com');
-        // Horizon::routeSlackNotificationsTo('slack-webhook-url', '#channel');
+        Horizon::auth(function (Request $request): bool {
+            $authenticatedUser = $request->user();
+
+            if ($authenticatedUser instanceof Asisten) {
+                return true;
+            }
+
+            $asisten = $request->user('asisten');
+
+            return $asisten instanceof Asisten;
+        });
     }
 
     /**
@@ -28,16 +38,11 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
     protected function gate(): void
     {
         Gate::define('viewHorizon', function ($user = null) {
-            return in_array(optional($user)->email, [
-                //
-            ]);
-        });
-    }
+            if ($user instanceof Asisten) {
+                return true;
+            }
 
-    protected function authorization()
-    {
-        Horizon::auth(function () {
-            return true;
+            return Auth::guard('asisten')->check();
         });
     }
 }
