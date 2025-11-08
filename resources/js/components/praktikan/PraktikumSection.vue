@@ -91,14 +91,40 @@
                 {{ generateScoreText(nilaiTa) }}
               </span>
 
-              <div class="w-64 h-24 flex">
+              <div class="w-full flex flex-col items-center gap-4 mt-4">
                 <div
-                  class="h-full w-full flex p-4 hover:p-5 cursor-pointer animation-enable-short"
-                  @click="emitShowNilaiTa(false)"
+                  v-if="taSubmissionFailed"
+                  class="w-64 h-24 flex"
                 >
-                  <div class="h-full w-full flex font-merri text-xl bg-gray-800 rounded-lg text-center m-auto">
-                    <div class="m-auto text-white">Lanjut Ke Jurnal</div>
+                  <div
+                    class="h-full w-full flex p-4 hover:p-5 cursor-pointer animation-enable-short"
+                    :class="{ 'opacity-70 pointer-events-none': isTaRetrying }"
+                    @click="$emit('retry-submit-ta')"
+                  >
+                    <div class="h-full w-full flex font-merri text-xl bg-red-700 rounded-lg text-center m-auto">
+                      <div class="m-auto text-white">
+                        {{ isTaRetrying ? 'Mengirim Ulang...' : 'Kirim Ulang Jawaban' }}
+                      </div>
+                    </div>
                   </div>
+                </div>
+
+                <div class="w-64 h-24 flex">
+                  <div
+                    class="h-full w-full flex p-4 hover:p-5 cursor-pointer animation-enable-short"
+                    @click="emitShowNilaiTa(false)"
+                  >
+                    <div class="h-full w-full flex font-merri text-xl bg-gray-800 rounded-lg text-center m-auto">
+                      <div class="m-auto text-white">Lanjut Ke Jurnal</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  v-if="taSubmissionFailed && taSubmissionError"
+                  class="font-overpass text-center text-red-600 text-xl"
+                >
+                  {{ taSubmissionError }}
                 </div>
               </div>
             </div>
@@ -350,14 +376,40 @@
                 {{ generateScoreText(nilaiTk) }}
               </span>
 
-              <div class="w-64 h-24 flex">
+              <div class="w-full flex flex-col items-center gap-4 mt-4">
                 <div
-                  class="h-full w-full flex p-4 hover:p-5 cursor-pointer animation-enable-short"
-                  @click="emitShowNilaiTk(false)"
+                  v-if="tkSubmissionFailed"
+                  class="w-64 h-24 flex"
                 >
-                  <div class="h-full w-full flex font-merri text-xl bg-gray-800 rounded-lg text-center m-auto">
-                    <div class="m-auto text-white">Lanjut Ke Feedback</div>
+                  <div
+                    class="h-full w-full flex p-4 hover:p-5 cursor-pointer animation-enable-short"
+                    :class="{ 'opacity-70 pointer-events-none': isTkRetrying }"
+                    @click="$emit('retry-submit-tk')"
+                  >
+                    <div class="h-full w-full flex font-merri text-xl bg-red-700 rounded-lg text-center m-auto">
+                      <div class="m-auto text-white">
+                        {{ isTkRetrying ? 'Mengirim Ulang...' : 'Kirim Ulang Jawaban' }}
+                      </div>
+                    </div>
                   </div>
+                </div>
+
+                <div class="w-64 h-24 flex">
+                  <div
+                    class="h-full w-full flex p-4 hover:p-5 cursor-pointer animation-enable-short"
+                    @click="emitShowNilaiTk(false)"
+                  >
+                    <div class="h-full w-full flex font-merri text-xl bg-gray-800 rounded-lg text-center m-auto">
+                      <div class="m-auto text-white">Lanjut Ke Feedback</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  v-if="tkSubmissionFailed && tkSubmissionError"
+                  class="font-overpass text-center text-red-600 text-xl"
+                >
+                  {{ tkSubmissionError }}
                 </div>
               </div>
             </div>
@@ -508,6 +560,22 @@ export default {
       type: Boolean,
       default: false,
     },
+    taSubmissionFailed: {
+      type: Boolean,
+      default: false,
+    },
+    taSubmissionError: {
+      type: String,
+      default: '',
+    },
+    tkSubmissionFailed: {
+      type: Boolean,
+      default: false,
+    },
+    tkSubmissionError: {
+      type: String,
+      default: '',
+    },
     soalFitb: {
       type: Array,
       default: () => [],
@@ -576,6 +644,14 @@ export default {
       type: Object,
       default: () => ({}),
     },
+    isTaRetrying: {
+      type: Boolean,
+      default: false,
+    },
+    isTkRetrying: {
+      type: Boolean,
+      default: false,
+    },
   },
   emits: [
     'polling-saved',
@@ -586,6 +662,8 @@ export default {
     'update:showNilaiTa',
     'update:showNilaiTk',
     'update:laporanPraktikan',
+    'retry-submit-ta',
+    'retry-submit-tk',
   ],
   methods: {
     handlePollingSaved() {

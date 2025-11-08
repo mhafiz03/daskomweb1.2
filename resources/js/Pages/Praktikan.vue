@@ -203,16 +203,19 @@
             :all-asisten="allAsisten" :all-asisten-polling="allAsistenPolling" :all-polling="allPolling"
             :current-praktikum="current_praktikum" :current-modul="current_modul" :programming-quote="programmingQuote"
             :quote-author="quoteAuthor" :modul-shown="modulShown" :show-nilai-ta="showNilaiTA"
-            :show-nilai-tk="showNilaiTK" :soal-fitb="soalFitb" :jawaban-fitb="jawabanFitb" :soal-jurnal="soalJurnal"
-            :jawaban-jurnal="jawabanJurnal" :soal-runmod="soalRunmod" :jawaban-runmod="jawabanRunmod"
-            :soal-mandiri="soalMandiri" :jawaban-mandiri="jawabanMandiri" :soal-ta="soalTA" :jawaban-ta="jawabanTA"
-            :soal-tk="soalTK" :jawaban-tk="jawabanTK" :laporan-praktikan="laporanPraktikan" :nilai-ta="nilaiTA"
-            :nilai-tk="nilaiTK" :selected-answers="selectedAnswers" :generate-score-text="generateScoreText"
+            :show-nilai-tk="showNilaiTK" :ta-submission-failed="taSubmissionFailed"
+            :ta-submission-error="taSubmissionError" :tk-submission-failed="tkSubmissionFailed"
+            :tk-submission-error="tkSubmissionError" :is-ta-retrying="isTaRetrying" :is-tk-retrying="isTkRetrying"
+            :soal-fitb="soalFitb" :jawaban-fitb="jawabanFitb" :soal-jurnal="soalJurnal" :jawaban-jurnal="jawabanJurnal"
+            :soal-runmod="soalRunmod" :jawaban-runmod="jawabanRunmod" :soal-mandiri="soalMandiri"
+            :jawaban-mandiri="jawabanMandiri" :soal-ta="soalTA" :jawaban-ta="jawabanTA" :soal-tk="soalTK"
+            :jawaban-tk="jawabanTK" :laporan-praktikan="laporanPraktikan" :nilai-ta="nilaiTA" :nilai-tk="nilaiTK"
+            :selected-answers="selectedAnswers" :generate-score-text="generateScoreText"
             @polling-saved="handlePollingSaved" @finish-praktikum="finishPraktikum"
             @text-answer-change="handleTextAnswerChange" @question-option-select="handleQuestionOptionSelect"
             @update:modulShown="value => modulShown = value" @update:showNilaiTa="value => showNilaiTA = value"
-            @update:showNilaiTk="value => showNilaiTK = value"
-            @update:laporanPraktikan="value => laporanPraktikan = value" />
+            @update:showNilaiTk="value => showNilaiTK = value" @retry-submit-ta="retrySubmitTa"
+            @retry-submit-tk="retrySubmitTk" @update:laporanPraktikan="value => laporanPraktikan = value" />
         </div>
       </div>
     </div>
@@ -597,6 +600,12 @@ export default {
 
       nilaiTA: '',
       nilaiTK: '',
+      taSubmissionFailed: false,
+      tkSubmissionFailed: false,
+      taSubmissionError: '',
+      tkSubmissionError: '',
+      isTaRetrying: false,
+      isTkRetrying: false,
 
       goodScoreText: [
         "Mantap gini nih kalau sebelum praktikum belajar",
@@ -667,6 +676,45 @@ export default {
         return this.goodScoreText[Math.floor(Math.random() * this.goodScoreText.length)];
       else
         return this.badScoreText[Math.floor(Math.random() * this.badScoreText.length)];
+    },
+
+    calculateMultipleChoiceScore(questions, answers) {
+      if (!Array.isArray(questions) || questions.length === 0) {
+        return 0;
+      }
+
+      const answerMap = new Map();
+      if (Array.isArray(answers)) {
+        answers.forEach((answer) => {
+          if (answer && typeof answer === 'object' && answer.soal_id) {
+            answerMap.set(answer.soal_id, (answer.jawaban || '').trim());
+          }
+        });
+      }
+
+      let correctCount = 0;
+      questions.forEach((question) => {
+        if (!question || !question.id) {
+          return;
+        }
+
+        const correctAnswer = (question.jawaban_benar || '').trim();
+        if (!correctAnswer) {
+          return;
+        }
+
+        const userAnswer = (answerMap.get(question.id) || '').trim();
+        if (userAnswer !== '' && userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+          correctCount += 1;
+        }
+      });
+
+      if (questions.length === 0) {
+        return 0;
+      }
+
+      const rawScore = (correctCount / questions.length) * 100;
+      return Math.round(rawScore);
     },
 
     handleTextAnswerChange(event) {
@@ -934,20 +982,38 @@ export default {
           if (typeof onSuccess === 'function') {
             onSuccess(data);
           }
-        } else {
-          this.toast.error(data.message);
+
+          return { success: true, data };
         }
+
+        const message = data.message || 'Gagal mengirim jawaban';
+        this.toast.error(message);
+        return { success: false, message };
       } catch (error) {
-        // Handle new robust controller error responses
-        if (error.response?.status === 422) {
-          this.toast.error(error.response.data.message || 'Data yang dikirim tidak valid');
-        } else if (error.response?.status === 409) {
-          this.toast.error(error.response.data.message || 'Tidak ada soal untuk modul ini');
-        } else if (error.response?.status === 500) {
-          this.toast.error(error.response.data.message || 'Terjadi kesalahan dalam penilaian');
-        } else {
-          this.handleRequestError(error, 'Gagal mengirim jawaban');
+        const errorCode = error?.code || '';
+        const isCanceled = errorCode === 'ERR_CANCELED' || error?.name === 'CanceledError';
+
+        if (isCanceled) {
+          return { success: false, message: 'Permintaan dibatalkan' };
         }
+
+        let message = 'Gagal mengirim jawaban';
+
+        if (error.response?.status === 422) {
+          message = error.response.data.message || 'Data yang dikirim tidak valid';
+          this.toast.error(message);
+        } else if (error.response?.status === 409) {
+          message = error.response.data.message || 'Tidak ada soal untuk modul ini';
+          this.toast.error(message);
+        } else if (error.response?.status === 500) {
+          message = error.response.data.message || 'Terjadi kesalahan dalam penilaian';
+          this.toast.error(message);
+        } else {
+          this.handleRequestError(error, message);
+          message = error?.response?.data?.message || message;
+        }
+
+        return { success: false, message };
       }
     },
 
@@ -1155,6 +1221,8 @@ export default {
       this.jawabanTA = [];
       this.chosenJawaban = [];
       this.selectedAnswers = {}; // Clear selected answers
+      this.taSubmissionFailed = false;
+      this.taSubmissionError = '';
       
       try {
         let questions = [];
@@ -1356,6 +1424,8 @@ export default {
       this.chosenJawaban = [];
       this.jawabanTK = [];
       this.selectedAnswers = {}; // Clear selected answers
+      this.tkSubmissionFailed = false;
+      this.tkSubmissionError = '';
       
       try {
         let questions = [];
@@ -1482,12 +1552,21 @@ export default {
 
     async startJurnal(isRealtime) {
       if (isRealtime) {
-        await this.submitJawaban('/praktikan/jawaban/ta', this.chosenJawaban, (data) => {
-          this.nilaiTA = data.nilaiTa;
-          this.showNilaiTA = true;
+        this.nilaiTA = this.calculateMultipleChoiceScore(this.soalTA, this.chosenJawaban);
+        this.showNilaiTA = true;
+
+        const result = await this.submitJawaban('/praktikan/jawaban/ta', this.chosenJawaban, () => {
           // Clear TA autosave after successful submission
           this.clearAutosave('ta');
         });
+
+        if (result?.success) {
+          this.taSubmissionFailed = false;
+          this.taSubmissionError = '';
+        } else {
+          this.taSubmissionFailed = true;
+          this.taSubmissionError = result?.message || 'Gagal mengirim jawaban TA';
+        }
       }
 
       await this.loadSoalJurnalAndFitb();
@@ -1524,15 +1603,64 @@ export default {
           await this.submitJawaban('/praktikan/jawaban/jurnal', this.jawabanRunmod);
         }
       } else if (isRealtime) {
-        await this.submitJawaban('/praktikan/jawaban/tk', this.chosenJawaban, (data) => {
-          this.nilaiTK = data.nilaiTk;
-          this.showNilaiTK = true;
+        this.nilaiTK = this.calculateMultipleChoiceScore(this.soalTK, this.chosenJawaban);
+        this.showNilaiTK = true;
+
+        const result = await this.submitJawaban('/praktikan/jawaban/tk', this.chosenJawaban, () => {
           // Clear TK autosave after successful submission
           this.clearAutosave('tk');
         });
+
+        if (result?.success) {
+          this.tkSubmissionFailed = false;
+          this.tkSubmissionError = '';
+        } else {
+          this.tkSubmissionFailed = true;
+          this.tkSubmissionError = result?.message || 'Gagal mengirim jawaban TK';
+        }
       }
 
       await this.checkExistingLaporan();
+    },
+
+    async retrySubmitTa() {
+      if (this.isTaRetrying) {
+        return;
+      }
+
+      this.isTaRetrying = true;
+      const result = await this.submitJawaban('/praktikan/jawaban/ta', this.chosenJawaban, () => {
+        this.clearAutosave('ta');
+      });
+      this.isTaRetrying = false;
+
+      if (result?.success) {
+        this.taSubmissionFailed = false;
+        this.taSubmissionError = '';
+      } else {
+        this.taSubmissionFailed = true;
+        this.taSubmissionError = result?.message || 'Gagal mengirim jawaban TA';
+      }
+    },
+
+    async retrySubmitTk() {
+      if (this.isTkRetrying) {
+        return;
+      }
+
+      this.isTkRetrying = true;
+      const result = await this.submitJawaban('/praktikan/jawaban/tk', this.chosenJawaban, () => {
+        this.clearAutosave('tk');
+      });
+      this.isTkRetrying = false;
+
+      if (result?.success) {
+        this.tkSubmissionFailed = false;
+        this.tkSubmissionError = '';
+      } else {
+        this.tkSubmissionFailed = true;
+        this.tkSubmissionError = result?.message || 'Gagal mengirim jawaban TK';
+      }
     },
 
     async handleStatusRunmod() {
