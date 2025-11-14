@@ -370,8 +370,9 @@ export default {
               this.comingFrom === 'pelanggaran' ||
               this.comingFrom === 'setpraktikan' ||
               this.comingFrom === 'rating' ||
-              this.comingFrom === 'allLaporan' ||
-              this.comingFrom === 'jawaban'){
+          this.comingFrom === 'allLaporan' ||
+          this.comingFrom === 'jawaban' ||
+          this.comingFrom === 'lihat_tp'){
 
       this.animate = false;
       this.pageActive = true;

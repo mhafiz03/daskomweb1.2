@@ -192,6 +192,19 @@
           </div>
         </div> 
 
+        <div class="w-full p-4 h-24 flex select-none cursor-pointer hover:text-white animation-enable"
+            :class="[{ 'bg-yellow-400 hover:bg-yellow-600': !changePage || !menuLihatTp },
+                    { 'bg-yellow-500 text-white': changePage && menuLihatTp }]"
+            v-on:click='travel("lihat_tp")'>
+          <div class="w-7/12 my-2 flex">
+            <div class="w-4/6"/>
+            <img class="select-none m-auto w-2/6 h-auto fas fa-eye">
+          </div>
+          <span class="ml-6 font-merri-bold font-medium w-full text-start self-center text-xl">
+            Lihat TP
+          </span>
+        </div>
+
         <div v-if="jawabanPriviledge.includes(currentUser.role_id) || jawabanPriviledge == 'all'">
           <div class="w-full p-4 h-24 flex select-none cursor-pointer hover:text-white animation-enable"
               :class="[{ 'bg-yellow-400 hover:bg-yellow-600': !changePage || !menuJawaban },
@@ -543,7 +556,8 @@ export default {
         this.comingFrom === 'setpraktikan'||
         this.comingFrom === 'rating' ||
         this.comingFrom === 'allLaporan' ||
-        this.comingFrom === 'jawaban'){
+        this.comingFrom === 'jawaban' ||
+        this.comingFrom === 'lihat_tp'){
 
       setTimeout(
         function() {

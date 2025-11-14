@@ -863,6 +863,7 @@ export default {
       'rating',
       'allLaporan',
       'jawaban',
+      'lihat_tp',
     ];
 
     if (incomingFrom.includes(this.comingFrom)) {

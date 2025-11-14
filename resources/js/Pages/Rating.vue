@@ -465,7 +465,8 @@ export default {
         this.comingFrom === 'setpraktikan' ||
         this.comingFrom === 'pelanggaran' ||
         this.comingFrom === 'allLaporan' ||
-        this.comingFrom === 'jawaban'){
+        this.comingFrom === 'jawaban' ||
+        this.comingFrom === 'lihat_tp'){
 
       setTimeout(
         function() {

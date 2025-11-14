@@ -208,7 +208,8 @@ export default {
         this.comingFrom === 'history'||
         this.comingFrom === 'rating' ||
         this.comingFrom === 'allLaporan' ||
-        this.comingFrom === 'jawaban'){
+        this.comingFrom === 'jawaban' ||
+        this.comingFrom === 'lihat_tp'){
 
       setTimeout(
         function() {

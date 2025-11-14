@@ -212,7 +212,15 @@ class PageController extends Controller
         $allJaga = JadwalJaga::with([
             'asisten:id,kode',
             'kelas:id,kelas,hari,shift',
-        ])->get();
+        ])->get()->map(fn (JadwalJaga $jadwal) => [
+            'id' => $jadwal->id,
+            'kelas_id' => $jadwal->kelas_id,
+            'asisten_id' => $jadwal->asisten_id,
+            'kode' => optional($jadwal->asisten)->kode,
+            'kelas' => optional($jadwal->kelas)->kelas,
+            'hari' => optional($jadwal->kelas)->hari,
+            'shift' => optional($jadwal->kelas)->shift,
+        ])->values();
 
         $allKelas = Kelas::all();
         $allAsisten = Asisten::orderBy('kode', 'asc')->get();

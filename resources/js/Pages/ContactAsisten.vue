@@ -1,8 +1,8 @@
 <template>
-  <div ref="menu" class="bg-green-900 w-full h-screen overflow-y-auto">
+  <div ref="menu" class="bg-green-900 w-full min-h-screen">
 
       <!-- Navbar -->
-      <section class="py-1 px-5 bg-green-700 w-full fixed">
+      <section class="py-1 px-5 bg-green-700 w-full sticky top-0 z-20">
         <div class="py-3 px-2 flex justify-between items-center">
           <div>
             <span class="bg-yellow-600 text-yellow-200 font-overpass text-xl rounded-xl pt-3 pb-2 px-3 hover:bg-yellow-700 hover:text-yellow-100 hover:duration-300 duration-300">{{user.nim}}</span>
@@ -16,7 +16,7 @@
       </section>
 
       <!-- Assistant List -->
-      <section class="pt-5 py-20 mt-18">
+      <section class="px-4 pt-28 pb-16">
         <div class="flex justify-center flex-wrap">
           <div v-for="asisten in allAsisten" :key="asisten.id">
             <div class="flex justify-center flex-wrap">
@@ -89,18 +89,6 @@ export default {
       //
     }
   },
-
-  mounted() {
-
-    document.body.classList.add('closed');
-    this.$refs.menu.scrollTop = this.position;
-
-  },
-  
-  beforeUnmount() {
-    document.body.classList.remove('closed');
-  },
-
   methods: {
 
     travel: function($whereTo){
