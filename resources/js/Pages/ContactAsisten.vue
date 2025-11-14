@@ -1,5 +1,5 @@
 <template>
-  <div ref="menu" class="bg-green-900 w-full h-full overflow-y-scroll">
+  <div ref="menu" class="bg-green-900 w-full h-screen overflow-y-auto">
 
       <!-- Navbar -->
       <section class="py-1 px-5 bg-green-700 w-full fixed">
@@ -77,6 +77,7 @@
 </template>
 
 <script>
+import { useLogout } from '@/composables/useLogout';
 export default {
   props: [
     'allAsisten',
@@ -113,16 +114,12 @@ export default {
     },
 
     signOut: function(){
-
-      const globe = this;
       this.pageActive = false;
       this.currentPage = false;
-      setTimeout(
-        function() {
-          globe.$inertia.get('/auth/praktikan/logout', {}, {
-            replace: true,
-          });
-        }, 1010); 
+      setTimeout(async () => {
+        const { logoutPraktikan } = useLogout();
+        await logoutPraktikan();
+      }, 1010);
     },
   }
 }

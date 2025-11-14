@@ -144,6 +144,16 @@
           </span>
         </div>
 
+        <!-- Lihat TP -->
+        <div class="bg-yellow-300 hover:bg-yellow-400 rounded-full h-auto w-auto my-1 duration-300 hover:duration-300 flex">
+          <span 
+            :class="{ 'bg-yellow-500': menuLihatTp }"
+            class="px-4 rounded-full text-green-800 hover:text-green-900 font-overpass text-2xl cursor-pointer duration-300"
+            @click="handleNavigate('lihat_tp')">
+            Lihat TP
+          </span>
+        </div>
+
         <!-- Jawaban -->
         <div class="bg-yellow-300 hover:bg-yellow-400 rounded-full h-auto w-auto my-1 duration-300 hover:duration-300 flex">
           <span 

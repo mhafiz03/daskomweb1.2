@@ -451,6 +451,7 @@
 
 <script>
 import { useToast } from '@/composables/useToast';
+import { useLogout } from '@/composables/useLogout';
 export default {
   props: [
     'comingFrom',
@@ -661,16 +662,12 @@ export default {
     },
 
     signOut: function(){
-
-      const globe = this;
       this.pageActive = false;
       this.currentPage = false;
-      setTimeout(
-        function() {
-          globe.$inertia.get('/auth/asisten/logout', {}, {
-            replace: true,
-          });
-        }, 1010); 
+      setTimeout(async () => {
+        const { logoutAsisten } = useLogout();
+        await logoutAsisten();
+      }, 1010);
     },
 
     updateKelas: function(){

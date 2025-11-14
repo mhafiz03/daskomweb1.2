@@ -188,6 +188,7 @@ import { ref, toRef, toRefs } from 'vue';
 import { useNavigation } from '@/composables/useNavigation';
 import { useToast } from '@/composables/useToast';
 import { useSidebarMenu } from '@/composables/useSidebarMenu';
+import { useLogout } from '@/composables/useLogout';
 import SidebarMenu from '@/components/asisten/SidebarMenu.vue';
 import AsistenProfilePanel from '@/components/asisten/ProfilePanel.vue';
 
@@ -220,6 +221,7 @@ export default {
 
     navigation.initializeMenu(props.comingFrom, true);
     const toast = useToast();
+    const { logoutAsisten } = useLogout();
 
     const sidebarMenu = useSidebarMenu({
       menuItems: MENU_ITEMS,
@@ -235,6 +237,7 @@ export default {
       menuRefWrapped: { ref: menuRef },
       ...navigationRefs,
       ...sidebarMenu,
+      logoutAsisten,
     };
   },
 
@@ -538,13 +541,10 @@ export default {
     },
 
     signOut() {
-      const globe = this;
       this.pageActive = false;
       this.currentPage = false;
-      setTimeout(() => {
-        globe.$inertia.get('/auth/asisten/logout', {}, {
-          replace: true,
-        });
+      setTimeout(async () => {
+        await this.logoutAsisten();
       }, 1010);
     },
   },

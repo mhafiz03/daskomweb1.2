@@ -454,6 +454,7 @@
 <script>
 import debounce from 'lodash.debounce';
 import { useToast } from '@/composables/useToast';
+import { useLogout } from '@/composables/useLogout';
 import QuestionBlock from '@/components/praktikan/QuestionBlock.vue';
 import PraktikumSection from '@/components/praktikan/PraktikumSection.vue';
 import JawabanSection from '@/components/praktikan/JawabanSection.vue';
@@ -2047,10 +2048,9 @@ export default {
 
       this.pageActive = false;
       this.isMenuShown = false;
-      setTimeout(() => {
-        this.$inertia.get('/auth/praktikan/logout', {}, {
-          replace: true,
-        });
+      setTimeout(async () => {
+        const { logoutPraktikan } = useLogout();
+        await logoutPraktikan();
       }, 1010);
     },
 

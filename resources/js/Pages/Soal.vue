@@ -673,6 +673,7 @@ import { ref, toRef, toRefs } from 'vue';
 import { useNavigation } from '@/composables/useNavigation';
 import { useToast } from '@/composables/useToast';
 import { useSidebarMenu } from '@/composables/useSidebarMenu';
+import { useLogout } from '@/composables/useLogout';
 import SidebarMenu from '@/components/asisten/SidebarMenu.vue';
 import AsistenProfilePanel from '@/components/asisten/ProfilePanel.vue';
 import SoalAction from '@/components/asisten/soal/SoalAction.vue'
@@ -701,6 +702,7 @@ export default {
   setup(props) {
     const menuContainer = ref(null);
     const toast = useToast();
+    const { logoutAsisten } = useLogout();
 
     // Initialize navigation composable
     const navigation = useNavigation({
@@ -729,6 +731,7 @@ export default {
       menuContainerRef: { ref: menuContainer }, // Wrapped for template
       ...navigationRefs,
       ...sidebarMenu,
+      logoutAsisten,
     };
   },
 
@@ -1321,10 +1324,8 @@ export default {
     signOut() {
       this.pageActive = false;
       this.currentPage = false;
-      setTimeout(() => {
-        this.$inertia.get('/auth/asisten/logout', {}, {
-          replace: true,
-        });
+      setTimeout(async () => {
+        await this.logoutAsisten();
       }, 1010);
     },
   }

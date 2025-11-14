@@ -374,6 +374,7 @@ option {
 <script>
 import { ref, toRefs } from 'vue';
 import { useNavigation } from '@/composables/useNavigation';
+import { useLogout } from '@/composables/useLogout';
 import SidebarMenu from '@/components/asisten/SidebarMenu.vue';
 import AsistenProfilePanel from '@/components/asisten/ProfilePanel.vue';
 export default {
@@ -404,11 +405,13 @@ export default {
 
     // Initialize menu state based on comingFrom prop
     navigation.initializeMenu(props.comingFrom, true);
+    const { logoutAsisten } = useLogout();
 
     // Return all navigation state and methods
     return {
       menuRef,
       ...toRefs(navigation),
+      logoutAsisten,
     };
   },
 
@@ -474,16 +477,11 @@ export default {
   methods: {
 
     signOut: function(){
-
-      const globe = this;
       this.pageActive = false;
       this.currentPage = false;
-      setTimeout(
-        function() {
-          globe.$inertia.get('/auth/asisten/logout', {}, {
-            replace: true,
-          });
-        }, 1010); 
+      setTimeout(async () => {
+        await this.logoutAsisten();
+      }, 1010);
     },
   }
 }

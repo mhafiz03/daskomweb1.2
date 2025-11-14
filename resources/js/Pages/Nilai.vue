@@ -588,6 +588,7 @@
 import { ref, toRefs } from 'vue';
 import { useNavigation } from '@/composables/useNavigation';
 import { useToast } from '@/composables/useToast';
+import { useLogout } from '@/composables/useLogout';
 export default {
   props: [
     'comingFrom',
@@ -610,12 +611,14 @@ export default {
     // Initialize menu state based on comingFrom prop
     navigation.initializeMenu(props.comingFrom, true);
     const toast = useToast();
+    const { logoutAsisten } = useLogout();
 
     // Return all navigation state and methods
     return {
       toast,
       menuRef,
       ...toRefs(navigation),
+      logoutAsisten,
     };
   },
 
@@ -798,16 +801,11 @@ export default {
       return '';
     },
     signOut: function () {
-
-      const globe = this;
       this.pageActive = false;
       this.currentPage = false;
-      setTimeout(
-        function () {
-          globe.$inertia.get('/auth/asisten/logout', {}, {
-            replace: true,
-          });
-        }, 1010);
+      setTimeout(async () => {
+        await this.logoutAsisten();
+      }, 1010);
     },
 
     showJawaban: function ($type) {
