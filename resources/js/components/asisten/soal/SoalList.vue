@@ -115,9 +115,5 @@ export default {
             ];
         }
     },
-      mounted() {
-    console.log('Full list:', this.list);
-    console.log('Filtered list:', this.filteredList);
-  }
 };
 </script>

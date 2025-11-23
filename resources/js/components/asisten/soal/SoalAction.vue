@@ -71,9 +71,6 @@
       }
     },
     emits: ['delete', 'edit', 'toggle-comments'],
-    mounted() {
-      console.log(this.soal);
-    }
 
   };
   </script>

@@ -1795,7 +1795,6 @@ export default {
       this.current_praktikum.modul_id = current_praktikum.modul_id;
       this.current_praktikum.kelas_id = current_praktikum.kelas_id;
       this.current_praktikum.status = current_praktikum.status;
-      console.log('Set current_praktikum:', this.current_praktikum);  
 
       if (this.current_praktikum.kelas_id !== this.currentUser.kelas_id) {
         return;
@@ -2006,9 +2005,7 @@ export default {
           this.$axios.get(`/praktikan/jawaban/ta/${this.currentUser.id}/${id}`).then(response => {
             if (response.data.message === "success") {
               this.jawabanTaAnswers = response.data.data;
-              console.log('TA Answers (Praktikan):', response.data.data);
             } else {
-              console.log('Failed to fetch TA answers:', response.data.message);
               this.jawabanTaAnswers = [];
             }
           }).catch(error => {
@@ -2020,9 +2017,7 @@ export default {
           this.$axios.get(`/praktikan/jawaban/tk/${this.currentUser.id}/${id}`).then(response => {
             if (response.data.message === "success") {
               this.jawabanTkAnswers = response.data.data;
-              console.log('TK Answers (Praktikan):', response.data.data);
             } else {
-              console.log('Failed to fetch TK answers:', response.data.message);
               this.jawabanTkAnswers = [];
             }
           }).catch(error => {

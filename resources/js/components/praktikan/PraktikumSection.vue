@@ -692,20 +692,5 @@ export default {
       this.$emit('update:laporanPraktikan', updated);
     },
   },
-  watch: {
-    currentPraktikum: {
-      handler(newVal, oldVal) {
-        console.log('🔍 currentPraktikum changed:');
-        console.log('  Old:', oldVal);
-        console.log('  New:', newVal);
-        console.log('  Status:', newVal.status, '(type:', typeof newVal.status, ')');
-      },
-      deep: true,
-      immediate: true // This will log on component mount
-    },
-    'currentPraktikum.status'(newVal, oldVal) {
-      console.log('📊 Status changed:', oldVal, '→', newVal, '(type:', typeof newVal, ')');
-    }
-  },
 };
 </script>
