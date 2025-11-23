@@ -19,7 +19,7 @@
           <span class="flex font-semibold font-overpass-mono-bold text-6xl text-teal-900"
                 style="letter-spacing: 0.5rem">
             LOGIN
-            <svg class="ml-4 self-start mt-4 w-12 h-12" viewBox="0 0 24 24">
+            <svg class="ml-4 self-start  w-12 h-12" viewBox="0 0 24 24">
                 <path fill="#234e52" d="M19,22H5V20H19V22M16,18L13.2,7.74C14.72,7.07 15.41,5.31 14.74,3.79C14.08,2.27 12.31,1.58 10.79,2.25C9.27,2.91 8.58,4.68 9.25,6.2C9.55,6.89 10.1,7.44 10.79,7.74L8,18H16Z" />
             </svg>
           </span>
@@ -73,11 +73,11 @@
           <span class="flex font-semibold font-overpass-mono-bold text-6xl text-teal-900"
                 style="letter-spacing: 0.5rem">
             SIGNUP
-            <svg class="ml-4 self-start mt-4 w-12 h-12" viewBox="0 0 24 24">
+            <svg class="ml-4 self-start w-13 h-13" viewBox="0 0 24 24">
                 <path fill="#234e52" d="M19,22H5V20H19V22M16,18L13.2,7.74C14.72,7.07 15.41,5.31 14.74,3.79C14.08,2.27 12.31,1.58 10.79,2.25C9.27,2.91 8.58,4.68 9.25,6.2C9.55,6.89 10.1,7.44 10.79,7.74L8,18H16Z" />
             </svg>
           </span>
-          <div class="flex items-center mb-6">
+          <div class="flex items-center mb-6 mt-5">
             <div class="w-1/3">
               <label class="block text-gray-600 font-bold text-right mb-1 pr-4" for="Nama">
                 Nama
@@ -177,7 +177,7 @@
           <span class="flex font-semibold font-overpass-mono-bold text-6xl text-teal-900"
                 style="letter-spacing: 0.5rem">
             LOGIN
-            <svg class="ml-4 self-start mt-4 w-12 h-12" viewBox="0 0 24 24">
+            <svg class="ml-4 self-start  w-12 h-12" viewBox="0 0 24 24">
               <path fill="#234e52" d="M19,22H5V20H19V22M17,10C15.58,10 14.26,10.77 13.55,12H13V7H16V5H13V2H11V5H8V7H11V12H10.45C9.35,10.09 6.9,9.43 5,10.54C3.07,11.64 2.42,14.09 3.5,16C4.24,17.24 5.57,18 7,18H17A4,4 0 0,0 21,14A4,4 0 0,0 17,10Z" />
             </svg>
           </span>
@@ -231,7 +231,7 @@
           <span class="flex font-semibold font-overpass-mono-bold text-6xl text-teal-900"
                 style="letter-spacing: 0.5rem">
             SIGNUP
-            <svg class="ml-4 self-start mt-4 w-12 h-12" viewBox="0 0 24 24">
+            <svg class="ml-4 self-start  w-12 h-12" viewBox="0 0 24 24">
               <path fill="#234e52" d="M19,22H5V20H19V22M17,10C15.58,10 14.26,10.77 13.55,12H13V7H16V5H13V2H11V5H8V7H11V12H10.45C9.35,10.09 6.9,9.43 5,10.54C3.07,11.64 2.42,14.09 3.5,16C4.24,17.24 5.57,18 7,18H17A4,4 0 0,0 21,14A4,4 0 0,0 17,10Z" />
             </svg>
           </span>

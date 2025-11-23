@@ -326,13 +326,13 @@
                 :class="[{'cursor-pointer bg-red-600 hover:bg-red-700 active:bg-red-800' : this.listAllJaga.length > 0},
                          {'bg-red-800' : this.listAllJaga.length === 0}]">
             <img class="fas fa-trash">
-              RESET ALL
+              RESET 
           </span>
         </div>
         <div class="w-full h-16full" v-scrollbar>
           <div>
             <transition-group
-                class="flex-wrap flex w-full h-auto" 
+                class="flex-wrap flex w-full h-[90vh] overflow-y-auto " 
                 name="plotting-list" tag="div">
              <div v-for="kelas in sortedAllKelas" v-bind:key="kelas.id"
                       class="flex flex-col w-1/4 py-3 px-4 text-xl text-gray-900">

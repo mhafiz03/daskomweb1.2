@@ -16,8 +16,8 @@
       </section>
 
       <!-- Assistant List -->
-      <section class="px-4 pt-28 pb-16">
-        <div class="flex justify-center flex-wrap">
+      <section class="px-4  pb-16">
+        <div class="flex justify-center flex-wrap max-h-screen overflow-y-auto">
           <div v-for="asisten in allAsisten" :key="asisten.id">
             <div class="flex justify-center flex-wrap">
               <div class="p-8 bg-yellow-500 flex text-yellow-900 rounded-xl w-96 h-full mx-8 mt-8">

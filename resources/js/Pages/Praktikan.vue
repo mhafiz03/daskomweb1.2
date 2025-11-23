@@ -57,7 +57,7 @@
               { 'visible': !viewPassForm }]">
                 <span
                   class="font-overpass text-2xl bg-red-500 text-white p-3 pb-2 rounded-lg hover:bg-red-600 cursor-pointer duration-300 hover:duration-300"
-                  v-on:click="formPassword(true)">Ganti Password<img class="ml-1 p-1 fas fa-pen fa-lg"></span>
+                  v-on:click="formPassword(true)">Ganti Password<img class="ml-1 p-1 fas fa-pen "></span>
               </div>
               <div class="w-auto h-auto ml-4 mt-4" :class="[{ 'hidden': viewPassForm },
               { 'visible': !viewPassForm }]">
@@ -477,6 +477,7 @@ export default {
     PraktikumSection,
     JawabanSection,
   },
+
 
   data() {
     return {
@@ -1794,6 +1795,7 @@ export default {
       this.current_praktikum.modul_id = current_praktikum.modul_id;
       this.current_praktikum.kelas_id = current_praktikum.kelas_id;
       this.current_praktikum.status = current_praktikum.status;
+      console.log('Set current_praktikum:', this.current_praktikum);  
 
       if (this.current_praktikum.kelas_id !== this.currentUser.kelas_id) {
         return;
